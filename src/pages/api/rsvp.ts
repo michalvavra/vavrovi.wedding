@@ -2,8 +2,15 @@ import { env } from "cloudflare:workers";
 import { parsePhoneNumber } from "awesome-phonenumber";
 import { z } from "zod";
 
+const isDev = import.meta.env.DEV;
+
+const turnstileTokenSchema = isDev
+  ? z.string().optional()
+  : z.string().trim().min(1, "Turnstile token is required.");
+
 const formSchema = z.object({
   "invite-id": z.string().trim().min(1, "Invite id is required."),
+  "cf-turnstile-response": turnstileTokenSchema,
   message: z.string().trim().min(1, "Message is required."),
   phone: z
     .string()
@@ -48,7 +55,65 @@ export async function POST({ request }: { request: Request }) {
     });
   }
 
-  const { message, phone, "invite-id": inviteId } = parsed.data;
+  const {
+    message,
+    phone,
+    "invite-id": inviteId,
+    "cf-turnstile-response": turnstileToken,
+  } = parsed.data;
+
+  if (!isDev) {
+    if (!env.TURNSTILE_SECRET_KEY) {
+      console.error("[api/rsvp]: missing Turnstile secret key");
+      if (wantsJson) {
+        return jsonResponse(
+          { ok: false, error: "Turnstile not configured." },
+          500,
+        );
+      }
+      return new Response("Turnstile not configured.", {
+        status: 500,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
+    }
+
+    try {
+      const verifyResponse = await fetch(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        {
+          method: "POST",
+          body: new URLSearchParams({
+            secret: env.TURNSTILE_SECRET_KEY,
+            response: turnstileToken ?? "",
+          }),
+        },
+      );
+      const verifyPayload = await verifyResponse.json();
+
+      if (!verifyPayload?.success) {
+        console.error("[api/rsvp]: turnstile failed", {
+          inviteId,
+          response: verifyPayload,
+        });
+        if (wantsJson) {
+          return jsonResponse({ ok: false, error: "Turnstile failed." }, 400);
+        }
+        return new Response("Turnstile failed.", {
+          status: 400,
+          headers: { "content-type": "text/plain; charset=utf-8" },
+        });
+      }
+    } catch (error) {
+      console.error("[api/rsvp]: turnstile verify error", { inviteId, error });
+      if (wantsJson) {
+        return jsonResponse({ ok: false, error: "Turnstile failed." }, 500);
+      }
+      return new Response("Turnstile failed.", {
+        status: 500,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
+    }
+  }
 
   try {
     await env.DB.prepare(
@@ -57,7 +122,7 @@ export async function POST({ request }: { request: Request }) {
       .bind(inviteId, message, phone)
       .run();
   } catch (error) {
-    console.error("[api/rsvp]: insert error", {inviteId, error});
+    console.error("[api/rsvp]: insert error", { inviteId, error });
 
     if (wantsJson) {
       return jsonResponse({ ok: false, error: "Failed to save RSVP." }, 500);

@@ -29,6 +29,7 @@ const homeHref = isEnglish ? "/en" : "/";
 const homeLabel = siteCopy.homeLabel;
 const ogImagePath = `/api/og/invite/${invite.id}.png`;
 const ogImage = new URL(ogImagePath, Astro.site ?? Astro.url).toString();
+const isDev = import.meta.env.DEV;
 ---
 
 <Layout
@@ -60,6 +61,7 @@ const ogImage = new URL(ogImagePath, Astro.site ?? Astro.url).toString();
           action="/api/rsvp"
           method="post"
           data-rsvp-form
+          data-is-dev={import.meta.env.DEV}
           data-status-sending={localized.status.sending}
           data-status-success={localized.status.success}
           data-status-error={localized.status.error}
@@ -90,6 +92,17 @@ const ogImage = new URL(ogImagePath, Astro.site ?? Astro.url).toString();
                 required
               >
             </label>
+            {!isDev && (
+              <div
+                class="c-invite-form__turnstile cf-turnstile"
+                data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}
+                data-theme="light"
+                data-size="invisible"
+                data-callback="onSuccess"
+                data-error-callback="onError"
+                data-expired-callback="onExpired"
+              ></div>
+            )}
             <button class="c-invite-form__button" type="submit">
               {localized.labels.submit}
             </button>
@@ -105,33 +118,29 @@ const ogImage = new URL(ogImagePath, Astro.site ?? Astro.url).toString();
         <script is:inline>
         const form = document.querySelector("[data-rsvp-form]");
         const status = document.querySelector("[data-rsvp-status]");
+        const isDev = form?.dataset?.isDev === "true";
         const statusMessages = {
           sending: form?.dataset?.statusSending ?? "",
           success: form?.dataset?.statusSuccess ?? "",
           error: form?.dataset?.statusError ?? "",
         };
+        let isSubmitting = false;
 
         if (!form || !status) {
           throw new Error("Missing RSVP form elements.");
         }
 
-        form.addEventListener("submit", async (event) => {
-          event.preventDefault();
-
-          const submitButton = form.querySelector("button[type='submit']");
-
-          if (submitButton instanceof HTMLButtonElement) {
-            submitButton.disabled = true;
-          }
-
-          status.hidden = false;
-          status.textContent = statusMessages.sending;
-
+        const submitRsvp = async (token) => {
           try {
+            const formData = new FormData(form);
+            if (token) {
+              formData.set("cf-turnstile-response", token);
+            }
+
             const response = await fetch(form.action, {
               method: "POST",
               headers: { Accept: "application/json" },
-              body: new FormData(form),
+              body: formData,
             });
 
             if (!response.ok) {
@@ -150,10 +159,67 @@ const ogImage = new URL(ogImagePath, Astro.site ?? Astro.url).toString();
             console.error(error);
             status.textContent = statusMessages.error;
           } finally {
+            isSubmitting = false;
+            const submitButton = form.querySelector("button[type='submit']");
             if (submitButton instanceof HTMLButtonElement) {
               submitButton.disabled = false;
             }
+            window.turnstile?.reset?.();
           }
+        };
+
+        const setErrorState = () => {
+          status.hidden = false;
+          status.textContent = statusMessages.error;
+          isSubmitting = false;
+          const submitButton = form.querySelector("button[type='submit']");
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = false;
+          }
+          window.turnstile?.reset?.();
+        };
+
+        window.onSuccess = async (token) => {
+          if (!isSubmitting) {
+            return;
+          }
+
+          await submitRsvp(token);
+        };
+
+        window.onError = () => {
+          setErrorState();
+        };
+
+        window.onExpired = () => {
+          setErrorState();
+        };
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const submitButton = form.querySelector("button[type='submit']");
+
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = true;
+          }
+
+          status.hidden = false;
+          status.textContent = statusMessages.sending;
+
+          if (isDev) {
+            isSubmitting = true;
+            await submitRsvp();
+            return;
+          }
+
+          if (!window.turnstile?.execute) {
+            setErrorState();
+            return;
+          }
+
+          isSubmitting = true;
+          window.turnstile.execute();
         });
         </script>
       </div>

@@ -12,6 +12,8 @@ const {
   showLanguage = true,
 } = Astro.props;
 
+const isDev = import.meta.env.DEV;
+
 const baseTitle = "Darča & Michal";
 const fullTitle = title
   ? title.includes(baseTitle)
@@ -34,6 +36,16 @@ const fullTitle = title
     {description && <meta property="og:description" content={description} />}
     {ogImage && <meta property="og:image" content={ogImage} />}
     {ogImage && <meta name="twitter:card" content="summary_large_image" />}
+    {!isDev && (
+      <>
+        <link rel="preconnect" href="https://challenges.cloudflare.com">
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+        ></script>
+      </>
+    )}
     <Fonts />
   </head>
   <body>
