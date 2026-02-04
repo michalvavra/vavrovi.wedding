@@ -1,25 +1,25 @@
 {
-	"name": "vavrovi-wedding",
-	"compatibility_date": "2026-01-31",
-	"routes": [
-		{
-			"pattern": "vavrovi.wedding",
-			"custom_domain": true
-		}
-	],
-	"observability": {
-		"enabled": true
-	},
-	"assets": {
-		"directory": "./dist",
-		"binding": "ASSETS"
-	},
-	"d1_databases": [
-		{
-			"binding": "DB",
-			"database_name": "vavrovi-wedding",
-			"database_id": "7e24e8f3-9259-40e2-b990-dff72df3a545",
-			"migrations_dir": "migrations"
-		}
-	]
+  "name": "vavrovi-wedding",
+  "compatibility_date": "2026-01-31",
+  "routes": [
+    {
+      "pattern": "vavrovi.wedding",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vavrovi-wedding",
+      "database_id": "7e24e8f3-9259-40e2-b990-dff72df3a545",
+      "migrations_dir": "migrations"
+    }
+  ]
 }
