@@ -19,6 +19,16 @@ npx wrangler d1 migrations apply vavrovi-wedding --local
 npx wrangler d1 migrations apply vavrovi-wedding --remote
 ```
 
+## Turnstile setup
+
+Set the Turnstile secret with Cloudflare Secrets for the Worker that serves the site.
+
+```sh
+npx wrangler secret put TURNSTILE_SECRET_KEY
+```
+
+For the client site key, set `PUBLIC_TURNSTILE_SITE_KEY` in your local `.env`.
+
 ## Querying submissions
 
 Local and remote examples:

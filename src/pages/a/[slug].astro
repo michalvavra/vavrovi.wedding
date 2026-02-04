@@ -198,6 +198,10 @@ const isDev = import.meta.env.DEV;
         form.addEventListener("submit", async (event) => {
           event.preventDefault();
 
+          if (isSubmitting) {
+            return;
+          }
+
           const submitButton = form.querySelector("button[type='submit']");
 
           if (submitButton instanceof HTMLButtonElement) {
@@ -219,6 +223,7 @@ const isDev = import.meta.env.DEV;
           }
 
           isSubmitting = true;
+          window.turnstile?.reset?.();
           window.turnstile.execute();
         });
         </script>
