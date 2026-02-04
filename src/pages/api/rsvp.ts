@@ -37,7 +37,7 @@ export async function POST({ request }: { request: Request }) {
   const parsed = formSchema.safeParse(entries);
 
   if (!parsed.success) {
-    console.error("[api/rsvp]: parse error", parsed.error);
+    console.error("[api/rsvp]: parse error", { error: parsed.error });
     if (wantsJson) {
       return jsonResponse({ ok: false, error: "Invalid form data." }, 400);
     }
@@ -57,7 +57,7 @@ export async function POST({ request }: { request: Request }) {
       .bind(inviteId, message, phone)
       .run();
   } catch (error) {
-    console.error("[api/rsvp]: insert error", error);
+    console.error("[api/rsvp]: insert error", {inviteId, error});
 
     if (wantsJson) {
       return jsonResponse({ ok: false, error: "Failed to save RSVP." }, 500);
@@ -69,7 +69,7 @@ export async function POST({ request }: { request: Request }) {
     });
   }
 
-  console.info("[api/rsvp]", { inviteId, phone, message });
+  console.info("[api/rsvp]: sent", { inviteId, phone, userMessage: message });
 
   if (wantsJson) {
     return jsonResponse({ ok: true });
