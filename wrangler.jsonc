@@ -1,6 +1,10 @@
 {
 	"name": "vavrovi-wedding",
 	"compatibility_date": "2026-01-31",
+	"custom_domains": ["vavrovi.wedding"],
+	"observability": {
+		"enabled": true
+	},
 	"assets": {
 		"directory": "./dist",
 		"binding": "ASSETS"
