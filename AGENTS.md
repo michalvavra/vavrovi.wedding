@@ -25,5 +25,6 @@ Wedding website for https://vavrovi.wedding.
 
 - Test following paths:
   - `/`
-  - `/+/pacakovi`
+  - `/a/pacakovi`
+  - `/a/rudi`
   - `/misto`
