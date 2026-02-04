@@ -14,8 +14,8 @@
     "@astrojs/cloudflare": "^13.0.0-beta.4",
     "@astrojs/mdx": "^5.0.0-beta.4",
     "astro": "^6.0.0-beta.7",
-    "astro-og-canvas": "^0.10.1",
     "awesome-phonenumber": "^7.7.0",
+    "workers-og": "^0.0.27",
     "zod": "^4.3.6"
   },
   "devDependencies": {

@@ -27,7 +27,7 @@ const siteCopy = getSiteCopy(lang);
 const isEnglish = lang === "en";
 const homeHref = isEnglish ? "/en" : "/";
 const homeLabel = siteCopy.homeLabel;
-const ogImagePath = `/open-graph/invite/${invite.id}.png`;
+const ogImagePath = `/og-image/invite/${invite.id}.png`;
 const ogImage = new URL(ogImagePath, Astro.site ?? Astro.url).toString();
 ---
 
