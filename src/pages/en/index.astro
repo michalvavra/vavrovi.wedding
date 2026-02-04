@@ -1,0 +1,21 @@
+---
+import InviteDatePlace from "../../components/InviteDatePlace.astro";
+import { getSiteCopy } from "../../i18n/site-copy";
+import Layout from "../../layouts/Layout.astro";
+
+const localized = getSiteCopy("en");
+const seoText = localized.home.seo;
+---
+
+<Layout lang="en" description={seoText}>
+  <main class="p-page">
+    <section class="p-page__section p-page__section--date-place l-page">
+      <InviteDatePlace href="/en" homeLabel="Home" />
+    </section>
+    <section class="p-page__section l-page">
+      <div class="p-page__content p-page__content--center">
+        <p>{seoText}</p>
+      </div>
+    </section>
+  </main>
+</Layout>

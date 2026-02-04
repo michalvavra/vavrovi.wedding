@@ -1,0 +1,35 @@
+---
+import logo from "../assets/logo-stacked-v7.png";
+import staryMlynLogo from "../assets/stary-mlyn-logo.jpg";
+
+const {
+  logoSrc = logo.src,
+  logoAlt = "Darča a Michal",
+  dateText = "8. 8. 2026",
+  dateTime = "2026-08-08",
+  placeName = "Starý Mlýn u Byšic",
+  placeLogoSrc = staryMlynLogo.src,
+  placeLogoAlt = "Starý Mlýn u Byšic",
+  href = "/",
+  homeLabel = "Domů",
+} = Astro.props;
+---
+
+<div class="c-invite-date-place">
+  <a href={href} class="c-invite-date-place__logo" aria-label={homeLabel}>
+    <img src={logoSrc} alt={logoAlt} class="c-invite-date-place__logo-image">
+  </a>
+  <div class="c-invite-date-place__details">
+    <time class="c-invite-date-place__date" datetime={dateTime}>
+      {dateText}
+    </time>
+    <div class="c-invite-date-place__place">
+      <img
+        src={placeLogoSrc}
+        alt={placeLogoAlt}
+        class="c-invite-date-place__place-logo"
+      >
+      <span class="c-invite-date-place__place-name">{placeName}</span>
+    </div>
+  </div>
+</div>

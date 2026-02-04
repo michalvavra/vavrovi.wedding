@@ -1,0 +1,35 @@
+---
+import { getSiteCopy } from "../i18n/site-copy";
+import Layout from "../layouts/Layout.astro";
+
+const localized = getSiteCopy("cs");
+---
+
+<Layout title={localized.schedule.title}>
+  <main class="p-page">
+    <section class="p-page__section l-page">
+      <div class="p-page__content p-page__content--center">
+        <h2>{localized.schedule.title}</h2>
+        <ul class="p-page__schedule">
+          {localized.schedule.items.map((item) => (
+            <li class="p-page__schedule-item">
+              <span class="p-page__schedule-time">{item.time}</span>
+              <span class="p-page__schedule-text">
+                {item.href ? (
+                  <>
+                    {item.text}{" "}
+                    <a class="p-page__schedule-link" href={item.href}>
+                      {item.linkText}
+                    </a>
+                  </>
+                ) : (
+                  item.title
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+</Layout>

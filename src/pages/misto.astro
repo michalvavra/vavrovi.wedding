@@ -1,0 +1,59 @@
+---
+import logo from "../assets/logo-stacked-v7.png";
+import staryMlynLogo from "../assets/stary-mlyn-logo.jpg";
+import InviteDatePlace from "../components/InviteDatePlace.astro";
+import InviteMap from "../components/InviteMap.astro";
+import { getSiteCopy } from "../i18n/site-copy";
+import Layout from "../layouts/Layout.astro";
+
+const mapboxToken = import.meta.env.PUBLIC_MAPBOX_TOKEN;
+const weddingDate = {
+  text: "8. 8. 2026",
+  datetime: "2026-08-08",
+};
+const venue = {
+  name: "Starý Mlýn u Byšic",
+  lat: 50.3071724,
+  lng: 14.6305947,
+  logo: staryMlynLogo.src,
+};
+const localized = getSiteCopy("cs");
+---
+
+<Layout title={localized.place.title}>
+  <main class="p-page">
+    <section class="p-page__section l-page">
+      <InviteDatePlace
+        logoSrc={logo.src}
+        dateText={weddingDate.text}
+        dateTime={weddingDate.datetime}
+        placeName={venue.name}
+        placeLogoSrc={venue.logo}
+        homeLabel={localized.homeLabel}
+      />
+    </section>
+
+    <section class="p-page__section l-page">
+      <div class="p-page__content p-page__content--center">
+        <p>
+          <a
+            class="p-page__link"
+            href="https://starymlynubysic.cz/"
+            rel="noreferrer"
+          >
+            starymlynubysic.cz
+          </a>
+        </p>
+      </div>
+      <div class="p-page__map">
+        {mapboxToken ? (
+          <InviteMap mapboxToken={mapboxToken} />
+        ) : (
+          <div class="p-page__map-placeholder">
+            <p>{localized.place.mapPlaceholder}</p>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+</Layout>

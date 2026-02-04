@@ -1,0 +1,17 @@
+@layer components {
+  .c-name-style {
+    display: inline-block;
+    line-height: inherit;
+    margin: 0;
+  }
+
+  .c-name-style__text {
+    display: inline-block;
+    padding-inline: 0.26em;
+    padding-block: 0.02em 0.06em;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklch, var(--color-accent) 28%, transparent);
+    background-color: var(--color-paper);
+    box-shadow: none;
+  }
+}

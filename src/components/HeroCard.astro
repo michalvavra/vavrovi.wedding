@@ -1,0 +1,8 @@
+---
+const { class: className, className: classNameProp } = Astro.props;
+const classes = ["c-hero", className, classNameProp].filter(Boolean).join(" ");
+---
+
+<section class={classes}>
+  <slot />
+</section>

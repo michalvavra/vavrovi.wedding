@@ -1,0 +1,40 @@
+@layer components {
+  .c-site-footer {
+    background-color: var(--color-surface);
+  }
+
+  .c-site-footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    padding-top: 0;
+    padding-bottom: var(--space-2);
+    width: min(100% - var(--page-gutter), var(--page-content-width));
+    margin-inline: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .c-site-footer__inner {
+      width: min(100% - var(--page-gutter-lg), var(--page-content-width));
+    }
+  }
+
+  .c-site-lang {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: inherit;
+  }
+
+  .c-site-lang__divider,
+  .c-site-lang__paren {
+    color: var(--color-ink-soft);
+  }
+
+  @media (min-width: 40rem) {
+    .c-site-footer__inner {
+      padding-bottom: var(--space-5);
+    }
+  }
+}

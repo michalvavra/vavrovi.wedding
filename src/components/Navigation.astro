@@ -1,0 +1,35 @@
+---
+import { getSiteCopy } from "../i18n/site-copy";
+
+const { lang = "cs" } = Astro.props;
+const isEnglish = lang === "en";
+const labels = getSiteCopy(lang).nav;
+const links = {
+  place: isEnglish ? "/en/venue" : "/misto",
+  program: isEnglish ? "/en/schedule" : "/program",
+};
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isPlaceActive = pathname === links.place;
+const isProgramActive = pathname === links.program;
+---
+
+<header class="c-site-header">
+  <div class="l-page c-site-header__inner">
+    <nav class="c-site-nav" aria-label="Navigation">
+      <a
+        href={links.place}
+        class={`c-nav-link ${isPlaceActive ? "is-active" : ""}`.trim()}
+        aria-current={isPlaceActive ? "page" : undefined}
+      >
+        {labels.place}
+      </a>
+      <a
+        href={links.program}
+        class={`c-nav-link ${isProgramActive ? "is-active" : ""}`.trim()}
+        aria-current={isProgramActive ? "page" : undefined}
+      >
+        {labels.program}
+      </a>
+    </nav>
+  </div>
+</header>

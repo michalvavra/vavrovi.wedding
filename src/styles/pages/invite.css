@@ -1,0 +1,403 @@
+@layer pages {
+  .p-page-layout {
+    min-height: 100vh;
+    background-color: var(--color-surface);
+  }
+
+  .p-page {
+    display: grid;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+  }
+
+  .p-page__content {
+    display: grid;
+    gap: var(--space-2);
+    max-width: var(--page-content-width);
+    margin-inline: auto;
+  }
+
+  .p-page__content--center {
+    text-align: center;
+  }
+
+  .p-page__link {
+    text-decoration: underline;
+    text-decoration-color: color-mix(
+      in oklch,
+      var(--color-ink) 55%,
+      transparent
+    );
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .p-page__map {
+    margin-top: var(--space-3);
+  }
+
+  .p-page__section--date-place {
+    margin-block: var(--space-4);
+  }
+
+  .p-page__content p {
+    color: var(--color-ink-muted);
+  }
+
+  .p-page__schedule {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-2);
+    text-align: left;
+    width: min(100%, 26rem);
+    margin-inline: auto;
+  }
+
+  .p-page__schedule-item {
+    display: grid;
+    grid-template-columns: minmax(4rem, auto) minmax(0, 1fr);
+    gap: var(--space-2);
+    align-items: baseline;
+  }
+
+  .p-page__schedule-time {
+    font-family: var(--font-serif);
+    color: var(--color-ink);
+  }
+
+  .p-page__schedule-text {
+    color: var(--color-ink-muted);
+  }
+
+  .p-page__schedule-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: color-mix(
+      in oklch,
+      var(--color-ink-muted) 55%,
+      transparent
+    );
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition:
+      color 0.2s ease,
+      text-decoration-color 0.2s ease;
+  }
+
+  .p-page__schedule-link:hover,
+  .p-page__schedule-link:focus-visible {
+    color: var(--color-ink);
+    text-decoration-color: var(--color-ink);
+    outline: none;
+  }
+
+  .p-page__map-placeholder {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+    text-align: center;
+    color: var(--color-ink-muted);
+    background-color: var(--color-surface);
+  }
+
+  .p-page__address {
+    margin: 0 0 var(--space-2);
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--color-ink-muted);
+  }
+
+  .c-invite-heading {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+    margin: 0;
+  }
+
+  .c-invite-date-place {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
+  .c-invite-date-place__logo {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .c-invite-date-place__logo-image {
+    height: 3.6rem;
+    width: auto;
+    display: block;
+  }
+
+  .c-invite-date-place__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 3.6rem;
+    text-align: center;
+  }
+
+  .c-invite-date-place__date {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 3.6vw + 0.5rem, 2.2rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  .c-invite-date-place__place {
+    display: inline-flex;
+    align-items: center;
+    justify-self: center;
+    gap: 0.5rem;
+  }
+
+  .c-invite-date-place__place-logo {
+    width: 1rem;
+    height: 1rem;
+    object-fit: contain;
+  }
+
+  .c-invite-date-place__place-name {
+    font: inherit;
+    line-height: 1;
+  }
+
+  .c-invite-map {
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+    width: 100%;
+    max-width: var(--page-content-width);
+    margin: 0 auto;
+    border: 1px solid var(--color-line);
+    border-radius: 18px;
+    background-color: var(--color-surface);
+  }
+
+  .c-invite-map__canvas {
+    width: 100%;
+    min-height: 14rem;
+    height: clamp(14rem, 40vw, 20rem);
+  }
+
+  .c-invite-map__canvas .mapboxgl-ctrl-top-right {
+    top: 0.6rem;
+    right: 0.6rem;
+  }
+
+  .c-invite-map__canvas .mapboxgl-ctrl-group {
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    box-shadow: none;
+    border: 1px solid var(--color-line);
+    background-color: var(--color-surface);
+  }
+
+  .c-invite-map__canvas .mapboxgl-ctrl-group button {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+  }
+
+  .c-invite-map__marker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    white-space: nowrap;
+  }
+
+  .c-invite-map__marker::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -0.42rem;
+    width: 0.85rem;
+    height: 0.85rem;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .c-invite-map__marker img {
+    width: 1.4rem;
+    height: 1.4rem;
+    object-fit: contain;
+  }
+
+  .c-invite-map__label {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: var(--color-ink);
+  }
+
+  .c-invite-map__caption {
+    margin: 0;
+    padding: var(--space-3);
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .c-invite-map__nav {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: minmax(0, 1fr);
+    justify-content: center;
+    width: 100%;
+    margin-inline: auto;
+    gap: var(--space-2);
+  }
+
+  .c-invite-map__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    text-decoration: none;
+    color: var(--color-ink);
+    padding: 0.45rem 0.8rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-line);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+    font-family: inherit;
+  }
+
+  .c-invite-map__link:hover,
+  .c-invite-map__link:focus-visible {
+    background-color: color-mix(in oklch, var(--color-ink) 6%, transparent);
+    border-color: color-mix(in oklch, var(--color-ink) 26%, transparent);
+    outline: none;
+  }
+
+  .c-invite-map__icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    display: block;
+    fill: currentColor;
+    margin-top: -0.08rem;
+  }
+
+  .c-invite-map__link span {
+    font: inherit;
+  }
+
+  @media (min-width: 40rem) {
+    .p-page {
+      gap: var(--space-5);
+      padding-block: var(--space-5);
+    }
+
+    .c-invite-map__nav {
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+      grid-template-columns: initial;
+    }
+
+    .c-invite-map__link {
+      width: auto;
+    }
+  }
+
+  .c-invite-form {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+
+  .c-invite-form__label {
+    display: grid;
+    gap: var(--space-1);
+    color: var(--color-ink-muted);
+  }
+
+  .c-invite-form__label-text {
+    font: inherit;
+    color: var(--color-ink);
+  }
+
+  .c-invite-form__field {
+    width: 100%;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--color-line);
+    padding: 0.6rem 0.8rem;
+    font: inherit;
+    color: var(--color-ink);
+    background-color: var(--color-surface);
+  }
+
+  .c-invite-form__field[type="tel"] {
+    width: min(40ch, 100%);
+  }
+
+  .c-invite-form__field:focus-visible {
+    outline: 2px solid color-mix(in oklch, var(--color-ink) 45%, transparent);
+    outline-offset: 2px;
+  }
+
+  .c-invite-form__field:is(textarea) {
+    resize: vertical;
+    min-height: auto;
+  }
+
+  .c-invite-form__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: var(--space-2);
+  }
+
+  .c-invite-form__button {
+    justify-self: start;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--color-line);
+    padding: 0.6rem 1.2rem;
+    font: inherit;
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .c-invite-form__button:hover,
+  .c-invite-form__button:focus-visible {
+    background-color: color-mix(in oklch, var(--color-ink) 6%, transparent);
+    border-color: color-mix(in oklch, var(--color-ink) 26%, transparent);
+    outline: none;
+  }
+
+  .c-invite-form__button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .c-invite-form__status {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-ink-muted);
+  }
+}

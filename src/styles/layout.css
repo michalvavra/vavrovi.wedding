@@ -1,0 +1,12 @@
+@layer layout {
+  .l-page {
+    width: min(100% - var(--page-gutter), var(--page-width));
+    margin-inline: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .l-page {
+      width: min(100% - var(--page-gutter-lg), var(--page-width-lg));
+    }
+  }
+}

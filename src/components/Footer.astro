@@ -1,0 +1,40 @@
+---
+const { lang = "cs", showLanguage = true } = Astro.props;
+const isEnglish = lang === "en";
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const languageMap = {
+  "/": { cs: "/", en: "/en" },
+  "/misto": { cs: "/misto", en: "/en/venue" },
+  "/program": { cs: "/program", en: "/en/schedule" },
+  "/en": { cs: "/", en: "/en" },
+  "/en/venue": { cs: "/misto", en: "/en/venue" },
+  "/en/schedule": { cs: "/program", en: "/en/schedule" },
+};
+const languageLinks = languageMap[pathname] ?? { cs: "/", en: "/en" };
+---
+
+<footer class="c-site-footer">
+  <div class="l-page c-site-footer__inner">
+    {showLanguage && (
+      <nav class="c-site-lang" aria-label="Language">
+        <span class="c-site-lang__paren" aria-hidden="true">(</span>
+        <a
+          href={languageLinks.cs}
+          class={`c-nav-link ${isEnglish ? "" : "is-active"}`.trim()}
+          aria-current={isEnglish ? undefined : "page"}
+        >
+          cs
+        </a>
+        <span class="c-site-lang__divider" aria-hidden="true">/</span>
+        <a
+          href={languageLinks.en}
+          class={`c-nav-link ${isEnglish ? "is-active" : ""}`.trim()}
+          aria-current={isEnglish ? "page" : undefined}
+        >
+          en
+        </a>
+        <span class="c-site-lang__paren" aria-hidden="true">)</span>
+      </nav>
+    )}
+  </div>
+</footer>

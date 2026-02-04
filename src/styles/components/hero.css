@@ -1,0 +1,18 @@
+@layer components {
+  .c-hero {
+    display: grid;
+    gap: var(--space-2);
+    text-align: center;
+    place-items: center;
+  }
+
+  .c-hero__content {
+    display: grid;
+    gap: var(--space-2);
+    max-width: 36rem;
+    margin-inline: auto;
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 2.2vw + 0.8rem, 1.5rem);
+    line-height: 1.4;
+  }
+}

@@ -1,0 +1,162 @@
+---
+import { getCollection, render } from "astro:content";
+import HeroCard from "../../components/HeroCard.astro";
+import InviteDatePlace from "../../components/InviteDatePlace.astro";
+import InviteHeading from "../../components/InviteHeading.astro";
+import NameStyle from "../../components/NameStyle.astro";
+import { getInviteCopy } from "../../i18n/invite-copy";
+import { getSiteCopy } from "../../i18n/site-copy";
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const invites = await getCollection("invites");
+
+  return invites.map((invite) => ({
+    params: { slug: invite.id },
+    props: { invite },
+  }));
+}
+
+const { invite } = Astro.props;
+const { Content } = await render(invite);
+const { title, lang = "cs" } = invite.data;
+const localized = getInviteCopy(lang);
+const siteCopy = getSiteCopy(lang);
+const isEnglish = lang === "en";
+const homeHref = isEnglish ? "/en" : "/";
+const homeLabel = siteCopy.homeLabel;
+const ogImagePath = `/open-graph/invite/${invite.id}.png`;
+const ogImage = new URL(ogImagePath, Astro.site ?? Astro.url).toString();
+---
+
+<Layout
+  title={`${title} + Darča & Michal`}
+  lang={lang}
+  ogImage={ogImage}
+  showLanguage={false}
+>
+  <main class="p-page">
+    <section class="p-page__section l-page">
+      <HeroCard>
+        <div class="c-hero__content">
+          <Content components={{ h1: InviteHeading, NameStyle }} />
+        </div>
+      </HeroCard>
+    </section>
+
+    <section class="p-page__section p-page__section--date-place l-page">
+      <InviteDatePlace href={homeHref} homeLabel={homeLabel} />
+    </section>
+
+    <section class="p-page__section l-page">
+      <div class="p-page__content">
+        {localized.intro.map((text) => (
+          <p>{text}</p>
+        ))}
+        <form
+          class="c-invite-form"
+          action="/api/rsvp"
+          method="post"
+          data-rsvp-form
+          data-status-sending={localized.status.sending}
+          data-status-success={localized.status.success}
+          data-status-error={localized.status.error}
+        >
+          <input type="hidden" name="invite-id" value={invite.id}>
+          <label class="c-invite-form__label">
+            <span class="c-invite-form__label-text">
+              {localized.labels.message}
+            </span>
+            <textarea
+              class="c-invite-form__field"
+              name="message"
+              rows="3"
+              required
+            ></textarea>
+          </label>
+          <div class="c-invite-form__row">
+            <label class="c-invite-form__label">
+              <span class="c-invite-form__label-text">
+                {localized.labels.phone}
+              </span>
+              <input
+                class="c-invite-form__field"
+                type="tel"
+                name="phone"
+                autocomplete="tel"
+                maxlength="40"
+                required
+              >
+            </label>
+            <button class="c-invite-form__button" type="submit">
+              {localized.labels.submit}
+            </button>
+          </div>
+          <p
+            class="c-invite-form__status"
+            data-rsvp-status
+            role="status"
+            aria-live="polite"
+            hidden
+          ></p>
+        </form>
+        <script is:inline>
+        const form = document.querySelector("[data-rsvp-form]");
+        const status = document.querySelector("[data-rsvp-status]");
+        const statusMessages = {
+          sending: form?.dataset?.statusSending ?? "",
+          success: form?.dataset?.statusSuccess ?? "",
+          error: form?.dataset?.statusError ?? "",
+        };
+
+        if (!form || !status) {
+          throw new Error("Missing RSVP form elements.");
+        }
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const submitButton = form.querySelector("button[type='submit']");
+
+          if (submitButton instanceof HTMLButtonElement) {
+            submitButton.disabled = true;
+          }
+
+          status.hidden = false;
+          status.textContent = statusMessages.sending;
+
+          try {
+            const response = await fetch(form.action, {
+              method: "POST",
+              headers: { Accept: "application/json" },
+              body: new FormData(form),
+            });
+
+            if (!response.ok) {
+              throw new Error("RSVP failed.");
+            }
+
+            const payload = await response.json();
+
+            if (!payload?.ok) {
+              throw new Error("RSVP failed.");
+            }
+
+            form.reset();
+            status.textContent = statusMessages.success;
+          } catch (error) {
+            console.error(error);
+            status.textContent = statusMessages.error;
+          } finally {
+            if (submitButton instanceof HTMLButtonElement) {
+              submitButton.disabled = false;
+            }
+          }
+        });
+        </script>
+      </div>
+    </section>
+  </main>
+</Layout>

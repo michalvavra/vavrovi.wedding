@@ -1,0 +1,46 @@
+---
+import Fonts from "../components/Fonts.astro";
+import Footer from "../components/Footer.astro";
+import Navigation from "../components/Navigation.astro";
+import "../styles/global.css";
+
+const {
+  title,
+  lang = "cs",
+  description,
+  ogImage,
+  showLanguage = true,
+} = Astro.props;
+
+const baseTitle = "Darča & Michal";
+const fullTitle = title
+  ? title.includes(baseTitle)
+    ? title
+    : `${title} | ${baseTitle}`
+  : baseTitle;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="generator" content={Astro.generator}>
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    {title && <meta property="og:title" content={title} />}
+    {description && <meta property="og:description" content={description} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta name="twitter:card" content="summary_large_image" />}
+    <Fonts />
+  </head>
+  <body>
+    <div class="p-page-layout">
+      <Navigation lang={lang} />
+      <slot />
+      <Footer lang={lang} showLanguage={showLanguage} />
+    </div>
+  </body>
+</html>

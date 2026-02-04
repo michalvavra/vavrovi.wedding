@@ -1,0 +1,12 @@
+---
+import NameStyle from "./NameStyle.astro";
+
+const { class: className, className: classNameProp, ...rest } = Astro.props;
+const classes = ["c-invite-heading", className, classNameProp]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<NameStyle as="h1" class={classes} {...rest}>
+  <slot />
+</NameStyle>

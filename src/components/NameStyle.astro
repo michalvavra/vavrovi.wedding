@@ -1,0 +1,15 @@
+---
+const {
+  as: Tag = "span",
+  class: className,
+  className: classNameProp,
+  ...rest
+} = Astro.props;
+const classes = ["c-name-style", className, classNameProp]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<Tag class={classes} {...rest}><span class="c-name-style__text">
+  <slot />
+</span></Tag>
