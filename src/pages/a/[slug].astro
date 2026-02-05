@@ -28,7 +28,7 @@ const isEnglish = lang === "en";
 const homeHref = isEnglish ? "/en" : "/";
 const homeLabel = siteCopy.homeLabel;
 const ogImagePath = `/api/og/invite/${invite.id}.png`;
-const ogImage = new URL(ogImagePath, Astro.site ?? Astro.url).toString();
+const ogImage = new URL(ogImagePath, Astro.site).toString();
 const isDev = import.meta.env.DEV;
 ---
 

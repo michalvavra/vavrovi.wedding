@@ -1,5 +1,5 @@
-import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
+import type { APIRoute } from "astro";
 import { ImageResponse, loadGoogleFont } from "workers-og";
 
 const invites = await getCollection("invites");
