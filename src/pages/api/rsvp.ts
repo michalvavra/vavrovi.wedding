@@ -1,5 +1,4 @@
 import { env } from "cloudflare:workers";
-import { parsePhoneNumber } from "awesome-phonenumber";
 import { z } from "zod";
 
 const isDev = import.meta.env.DEV;
@@ -12,23 +11,7 @@ const formSchema = z.object({
   "invite-id": z.string().trim().min(1, "Invite id is required."),
   "cf-turnstile-response": turnstileTokenSchema,
   message: z.string().trim().min(1, "Message is required."),
-  phone: z
-    .string()
-    .trim()
-    .min(1, "Phone number is required.")
-    .transform((value, ctx) => {
-      const phoneNumber = parsePhoneNumber(value, { regionCode: "CZ" });
-
-      if (!phoneNumber.valid) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Invalid phone number.",
-        });
-        return z.NEVER;
-      }
-
-      return phoneNumber.number.e164;
-    }),
+  phone: z.string().trim().optional().transform((value) => value ?? ""),
 });
 
 const jsonResponse = (body: Record<string, unknown>, status = 200) =>
